@@ -1,36 +1,52 @@
-﻿namespace AMPS
+﻿
+
+namespace AMPS;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    private readonly DataBaseServices _dbService;
+
+    public MainPage(DataBaseServices dbService)
     {
+        InitializeComponent();
+        _dbService = dbService;
+    }
 
-        private readonly DataBaseServices _dbService;
-
-        public MainPage(DataBaseServices dbService)
+    private async void OnLoginClicked(object sender, EventArgs e)
+    {
+        // Validación básica de campos vacíos antes de llamar a la DB
+        if (string.IsNullOrWhiteSpace(StudentID.Text) || string.IsNullOrWhiteSpace(Password.Text))
         {
-            InitializeComponent();
-            _dbService = dbService;
+            await DisplayAlert("Atención", "Por favor, completa todos los campos", "OK");
+            return;
         }
-        private async void OnSignUpClicked(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("Registrar");
-        }
 
-        private async void OnLoginClicked(object sender, EventArgs e)
+        try
         {
-            string StudentId = StudentID.Text;
-            string password = Password.Text;
-
-            var estudiante = await _dbService.LoginStudentAsync(StudentId, password);
+            var estudiante = await _dbService.LoginStudentAsync(StudentID.Text, Password.Text);
 
             if (estudiante != null)
             {
-                await DisplayAlert("Bienvenido", $"Acceso concedido para: {estudiante.StudentId}", "Aceptar");
                 
+                await Shell.Current.GoToAsync("//Matricula");
             }
             else
             {
-                await DisplayAlert("Denegado", "Usuario o contraseña incorrectos", "Reintentar");
+                await DisplayAlert("Error", "ID o contraseña incorrectos", "Intentar de nuevo");
             }
         }
+        catch (Exception ex)
+        {
+            
+            await DisplayAlert("Error de Sistema", "No se pudo conectar con la base de datos.", "OK");
+        }
+
     }
+    private async void OnSignUpClicked(object sender, EventArgs e)
+    {
+        // Navega a la página de registro
+        await Shell.Current.GoToAsync("Registrar");
+    }
+
+
 }

@@ -16,7 +16,7 @@
 
             <Entry x:Name="TxtStudentId" 
                    Placeholder="ID de Estudiante (Ej: 2023001)" 
-                   Keyboard="Numeric" />
+                   Keyboard="Text" />
 
             <Entry x:Name="TxtFullName" 
                    Placeholder="Nombre Completo" />
@@ -34,7 +34,8 @@
                     BackgroundColor="#2196F3"
                     TextColor="White"
                     CornerRadius="10"
-                    Margin="0,20,0,0" />
+                    Margin="0,20,0,0" 
+					/>
 
             <Button Text="Volver"
                     Clicked="OnBtnVolverClicked"

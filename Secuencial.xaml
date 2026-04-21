@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AMPS.Secuencial"
+             Title="Secuencial Académico">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="20">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="5" Margin="0,0,0,10">
+            <Label Text="Progreso de Carrera" 
+           FontSize="22" 
+           FontAttributes="Bold" 
+           TextColor="{StaticResource AmpsBlue}"
+           HorizontalOptions="Center"/>
+
+            <Button Text="Subir Secuencial (Documento)"
+            Clicked="OnUploadDocumentClicked"
+            BackgroundColor="LightGray"
+            TextColor="Black"
+            Margin="0,10,0,0"/>
+            <Label x:Name="FileNameLabel" 
+           Text="Ningún archivo seleccionado" 
+           FontSize="12" 
+           TextColor="Gray" 
+           HorizontalOptions="Center"/>
+
+            <Label Text="Marca los cursos que ya has aprobado" 
+           FontSize="14" 
+           TextColor="Gray" 
+           HorizontalOptions="Center"
+           Margin="0,10,0,0"/>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" 
+                        ItemsSource="{Binding MiSecuencial}" 
+                        Margin="0,10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" 
+                           Padding="10" 
+                           CornerRadius="8" 
+                           BorderColor="#E0E0E0"
+                           HasShadow="False">
+                        <Grid ColumnDefinitions="50,*">
+                            <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
+                                      Grid.Column="0" 
+                                      VerticalOptions="Center"
+                                      Color="{StaticResource AmpsBlue}"/>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding Nombre}" 
+                                       FontAttributes="Bold" 
+                                       FontSize="16"
+                                       TextColor="Black"/>
+                                <Label Text="{Binding Codigo}" 
+                                       FontSize="12" 
+                                       TextColor="Gray"/>
+                                <Label Text="{Binding Creditos, StringFormat='{0} Créditos'}" 
+                                       FontSize="11" 
+                                       TextColor="{StaticResource AmpsBlue}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2"
+                Text="Guardar Progreso"
+                Clicked="OnGuardarProgresoClicked"
+                BackgroundColor="{StaticResource AmpsBlue}"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                Margin="0,10,0,0"/>
+    </Grid>
+</ContentPage>
