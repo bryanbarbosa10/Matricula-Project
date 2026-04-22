@@ -1,4 +1,6 @@
 ﻿
+
+
 using SQLite;
 
 namespace AMPS
@@ -8,13 +10,12 @@ namespace AMPS
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
+        //Using unique to validate by it and avoid repetition
         [Unique]
-        public string? StudentId { get; set; }
+        public string StudentId { get; set; } = string.Empty;
 
-        public string? Password { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public string? FullName { get; set; }
-
-        public string? Email { get; set; }
+        public string Email { get; set; } = string.Empty;
     }
 }

@@ -6,31 +6,36 @@
     xmlns:local="clr-namespace:AMPS"
     Shell.FlyoutBehavior="Flyout">
 
-    <Shell.FlyoutHeader>
-        <VerticalStackLayout Padding="20" BackgroundColor="#2196F3">
-            <Label x:Name="LblEstudianteId" 
-                   Text="Estudiante AMPS" 
-                   HorizontalOptions="Center" 
-                   FontAttributes="Bold" 
-                   TextColor="White"/>
-        </VerticalStackLayout>
-    </Shell.FlyoutHeader>
-
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
-    <FlyoutItem Title="Matrícula" Icon="dotnet_bot.png">
-        <ShellContent ContentTemplate="{DataTemplate local:Matricula}" />
+    <!-- TempHome/user create -->
+    <FlyoutItem Title="Home">
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Promedio" Icon="dotnet_bot.png">
-        <ShellContent ContentTemplate="{DataTemplate local:Promedio}" />
+    <!-- Secuencial -->
+    <FlyoutItem Title="Secuencial">
+        <ShellContent
+            Title="Secuencial"
+            ContentTemplate="{DataTemplate local:Secuencial}"
+            Route="Secuencial" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Secuencial" Icon="dotnet_bot.png">
-        <ShellContent ContentTemplate="{DataTemplate local:Secuencial}" />
+    <!-- Matricula -->
+    <FlyoutItem Title="Matricula">
+        <ShellContent
+            Title="Matricula"
+            ContentTemplate="{DataTemplate local:Matricula}"
+            Route="Matricula" />
+    </FlyoutItem>
+
+    <!-- Promedio -->
+    <FlyoutItem Title="Promedio">
+        <ShellContent
+            Title="Promedio"
+            ContentTemplate="{DataTemplate local:Promedio}"
+            Route="Promedio" />
     </FlyoutItem>
 
 </Shell>

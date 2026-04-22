@@ -1,17 +1,18 @@
-﻿namespace AMPS
+﻿
+
+
+namespace AMPS
 {
     public partial class AppShell : Shell
     {
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute("Registrar", typeof(Registrar));
-            Routing.RegisterRoute("MainPage", typeof(MainPage));
-        }
 
-        public void SetUserContext(string studentId)
-        {
-            LblEstudianteId.Text = $"ID: {studentId}";
+            // Routes
+            Routing.RegisterRoute(nameof(Matricula), typeof(Matricula));
+            Routing.RegisterRoute(nameof(Promedio), typeof(Promedio));
+            Routing.RegisterRoute(nameof(Secuencial), typeof(Secuencial));
         }
     }
 }
