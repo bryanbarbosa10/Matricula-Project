@@ -1,6 +1,7 @@
 ﻿
 <!--Members:
-	Eloim Borges R00572231	21/04/26	
+	Eloim Borges  R00572231	21/04/26
+	Bryan Barbosa R00581455 26/04/26
 	-->
 
 
@@ -78,6 +79,27 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Dashboard.xaml.cs">
+	    <DependentUpon>Dashboard.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="ProfileCreation.xaml.cs">
+	    <DependentUpon>ProfileCreation.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="ProfileManagement.xaml.cs">
+	    <DependentUpon>ProfileManagement.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Dashboard.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ProfileManagement.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

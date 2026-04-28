@@ -1,32 +1,28 @@
-﻿
-    
-    
-    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AMPS.MainPage">
+             x:Class="AMPS.ProfileCreation"
+             Title="Creación de Perfil">
 
     <ScrollView>
         <VerticalStackLayout
-            
             Padding="30,40"
             Spacing="20">
 
-            <!-- App title -->
+            <!-- Page title -->
             <Label
-                Text="AMPS"
+                Text="Creación de Perfil"
                 FontSize="32"
                 FontAttributes="Bold"
                 HorizontalOptions="Center" />
 
-            <!-- subtitle -->
+            <!-- Subtitle -->
             <Label
-                Text="Create your student profile"
+                Text="Ingresa la información del estudiante"
                 FontSize="18"
                 HorizontalOptions="Center" />
 
-            
-            
-            <!-- Fields -->
+            <!-- Name -->
             <Entry
                 x:Name="NameEntry"
                 Placeholder="Name"
@@ -34,6 +30,7 @@
                 BackgroundColor="White"
                 TextColor="Black" />
 
+            <!-- Student ID -->
             <Entry
                 x:Name="StudentIdEntry"
                 Placeholder="Student ID"
@@ -41,7 +38,7 @@
                 BackgroundColor="White"
                 TextColor="Black" />
 
-            
+            <!-- Optional email -->
             <Entry
                 x:Name="EmailEntry"
                 Placeholder="University Email (Optional)"
@@ -49,9 +46,9 @@
                 BackgroundColor="White"
                 TextColor="Black" />
 
-            <!-- SaveButton -->
+            <!-- Save profile -->
             <Button
-                Text="Save Profile"
+                Text="Guardar Perfil"
                 BackgroundColor="#2196F3"
                 TextColor="White"
                 CornerRadius="8"

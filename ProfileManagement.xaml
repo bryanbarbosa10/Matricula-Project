@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AMPS.ProfileManagement"
+             Title="Administración de Perfiles">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Title -->
+        <Label
+            Text="Administración de Perfiles"
+            FontSize="26"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
+        <!-- Add profile -->
+        <Button
+            Text="+ Añadir Perfil"
+            Clicked="OnAddProfileClicked" />
+
+        <!-- Profiles list -->
+        <CollectionView x:Name="ProfilesCollectionView">
+            <CollectionView.Header>
+                <Grid Padding="10"
+                      ColumnDefinitions="*,*,*,Auto"
+                      BackgroundColor="#2A2A2A">
+                    <Label Text="Nombre" FontAttributes="Bold" TextColor="White" />
+                    <Label Grid.Column="1" Text="Student ID" FontAttributes="Bold" TextColor="White" />
+                    <Label Grid.Column="2" Text="Email" FontAttributes="Bold" TextColor="White" />
+                    <Label Grid.Column="3" Text="Editar" FontAttributes="Bold" TextColor="White" />
+                </Grid>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10" ColumnDefinitions="*,*,*,Auto">
+
+                        <!-- Name -->
+                        <Label Text="{Binding Name}" VerticalOptions="Center" />
+
+                        <!-- Student ID -->
+                        <Label Grid.Column="1"
+                               Text="{Binding StudentId}"
+                               VerticalOptions="Center" />
+
+                        <!-- Email -->
+                        <Label Grid.Column="2"
+                               Text="{Binding Email}"
+                               VerticalOptions="Center" />
+
+                        <!-- Edit button -->
+                        <Button Grid.Column="3"
+                                Text="Edit"
+                                Clicked="OnEditProfileClicked"
+                                CommandParameter="{Binding .}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

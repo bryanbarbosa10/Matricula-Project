@@ -4,14 +4,22 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:AMPS"
-    Shell.FlyoutBehavior="Flyout">
+    FlyoutBehavior="Flyout">
 
-    <!-- TempHome/user create -->
-    <FlyoutItem Title="Home">
+    <!-- Main page -->
+    <FlyoutItem Title="Dashboard">
         <ShellContent
-            Title="Home"
-            ContentTemplate="{DataTemplate local:MainPage}"
-            Route="MainPage" />
+            Title="Dashboard"
+            ContentTemplate="{DataTemplate local:Dashboard}"
+            Route="Dashboard" />
+    </FlyoutItem>
+
+    <!-- Profile management -->
+    <FlyoutItem Title="Administración de Perfiles">
+        <ShellContent
+            Title="Administración de Perfiles"
+            ContentTemplate="{DataTemplate local:ProfileManagement}"
+            Route="ProfileManagement" />
     </FlyoutItem>
 
     <!-- Secuencial -->
@@ -22,20 +30,20 @@
             Route="Secuencial" />
     </FlyoutItem>
 
+    <!-- Promedio -->
+    <FlyoutItem Title="Promedio">
+        <ShellContent
+        Title="Promedio"
+        ContentTemplate="{DataTemplate local:Promedio}"
+        Route="Promedio" />
+    </FlyoutItem>
+
     <!-- Matricula -->
     <FlyoutItem Title="Matricula">
         <ShellContent
             Title="Matricula"
             ContentTemplate="{DataTemplate local:Matricula}"
             Route="Matricula" />
-    </FlyoutItem>
-
-    <!-- Promedio -->
-    <FlyoutItem Title="Promedio">
-        <ShellContent
-            Title="Promedio"
-            ContentTemplate="{DataTemplate local:Promedio}"
-            Route="Promedio" />
     </FlyoutItem>
 
 </Shell>
