@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AMPS.ProfileCreation"
+             Title="Creación de Perfil">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,40"
+            Spacing="20">
+
+            <!-- Page title -->
+            <Label
+                Text="Creación de Perfil"
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <!-- Subtitle -->
+            <Label
+                Text="Ingresa la información del estudiante"
+                FontSize="18"
+                HorizontalOptions="Center" />
+
+            <!-- Name -->
+            <Entry
+                x:Name="NameEntry"
+                Placeholder="Name"
+                MaxLength="30"
+                BackgroundColor="White"
+                TextColor="Black" />
+
+            <!-- Student ID -->
+            <Entry
+                x:Name="StudentIdEntry"
+                Placeholder="Student ID"
+                MaxLength="25"
+                BackgroundColor="White"
+                TextColor="Black" />
+
+            <!-- Optional email -->
+            <Entry
+                x:Name="EmailEntry"
+                Placeholder="University Email (Optional)"
+                Keyboard="Email"
+                BackgroundColor="White"
+                TextColor="Black" />
+
+            <!-- Save profile -->
+            <Button
+                Text="Guardar Perfil"
+                BackgroundColor="#2196F3"
+                TextColor="White"
+                CornerRadius="8"
+                Clicked="OnSaveProfileClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

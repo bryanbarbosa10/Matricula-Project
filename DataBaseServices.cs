@@ -56,6 +56,11 @@ namespace AMPS
             return student;
         }
 
+        // Update an existing student profile
+        public Task<int> UpdateStudentAsync(Student student)
+        {
+            return _database.UpdateAsync(student);
+        }
 
 
         // COURSES-----------------------------------------
