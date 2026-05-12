@@ -4,9 +4,16 @@ namespace AMPS;
 
 public class Course
 {
-    [PrimaryKey]
-    public string Codigo { get; set; }
-    public string Nombre { get; set; }
+    [PrimaryKey, AutoIncrement]
+    public int Id { get; set; }
+
+    public int StudentDbId { get; set; }
+
+    public string Codigo { get; set; } = string.Empty;
+
+    public string Nombre { get; set; } = string.Empty;
+
     public int Creditos { get; set; }
+
     public bool IsCompleted { get; set; }
 }

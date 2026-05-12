@@ -2,14 +2,17 @@
 {
     public partial class App : Application
     {
-        public App()
+        private readonly DataBaseServices _dbService;
+
+        public App(DataBaseServices dbService)
         {
             InitializeComponent();
+            _dbService = dbService;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            return new Window(new AppShell(_dbService));
         }
     }
 }

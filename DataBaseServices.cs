@@ -9,51 +9,55 @@ namespace AMPS
 {
     public class DataBaseServices
     {
-        //Main connection to db
+        // Main connection to db
         private readonly SQLiteAsyncConnection _database;
 
         public DataBaseServices(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
-            
-            //Create tables if not already
+
+            // Create tables if not already
             _database.CreateTableAsync<Student>().Wait();
             _database.CreateTableAsync<Course>().Wait();
             _database.CreateTableAsync<Grade>().Wait();
+            _database.CreateTableAsync<MatriculaItem>().Wait();
         }
 
-
-
-        //STUDENTS-----------------------------------------
+        // STUDENTS-----------------------------------------
 
         // Check for profiles
         public async Task<bool> HasStudentsAsync()
         {
-            var students = await _database.Table<Student>().ToListAsync();
-            return students.Count > 0;
+            var count = await _database.Table<Student>().CountAsync();
+            return count > 0;
         }
 
-        //New Student profiles
+        // New Student profiles
         public Task<int> SaveStudentAsync(Student student)
         {
             return _database.InsertAsync(student);
         }
 
-        //All profiles avaible
+        // All profiles available
         public Task<List<Student>> GetStudentsAsync()
         {
             return _database.Table<Student>().ToListAsync();
         }
 
-        //Validate unique student id
-        //Holds A.I fix!---^
+        // Get student by database Id
+        public async Task<Student?> GetStudentByIdAsync(int id)
+        {
+            return await _database.Table<Student>()
+                .Where(s => s.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        // Validate unique student id
         public async Task<Student?> GetStudentByStudentIdAsync(string studentId)
         {
-            var student = await _database.Table<Student>()
+            return await _database.Table<Student>()
                 .Where(s => s.StudentId == studentId)
                 .FirstOrDefaultAsync();
-
-            return student;
         }
 
         // Update an existing student profile
@@ -61,7 +65,6 @@ namespace AMPS
         {
             return _database.UpdateAsync(student);
         }
-
 
         // COURSES-----------------------------------------
 
@@ -71,32 +74,140 @@ namespace AMPS
             return _database.Table<Course>().ToListAsync();
         }
 
-        // Add or edit courses
-        public Task<int> SaveCourseAsync(Course course)
+        // Shows courses only for active profile
+        public async Task<List<Course>> GetCoursesForActiveStudentAsync()
         {
-            return _database.InsertOrReplaceAsync(course);
+            var activeStudent = ActiveProfileService.CurrentStudent;
+
+            if (activeStudent == null)
+                return new List<Course>();
+
+            int studentDbId = activeStudent.Id;
+
+            return await _database.Table<Course>()
+                .Where(c => c.StudentDbId == studentDbId)
+                .ToListAsync();
         }
 
+        // Add or edit course for active profile
+        public async Task<int> SaveCourseAsync(Course course)
+        {
+            var activeStudent = ActiveProfileService.CurrentStudent;
 
+            if (activeStudent == null)
+                throw new Exception("No hay perfil activo.");
+
+            course.StudentDbId = activeStudent.Id;
+
+            if (course.Id != 0)
+                return await _database.UpdateAsync(course);
+
+            return await _database.InsertAsync(course);
+        }
 
         // GRADES------------------------------------------
 
-        //SHow grades
+        // Show all grades
         public Task<List<Grade>> GetGradesAsync()
         {
             return _database.Table<Grade>().ToListAsync();
         }
 
-        // Save grades
-        public Task<int> SaveGradeAsync(Grade grade)
+        // Shows grades only for active profile
+        public async Task<List<Grade>> GetGradesForActiveStudentAsync()
         {
-            return _database.InsertAsync(grade);
+            var activeStudent = ActiveProfileService.CurrentStudent;
+
+            if (activeStudent == null)
+                return new List<Grade>();
+
+            int studentDbId = activeStudent.Id;
+
+            return await _database.Table<Grade>()
+                .Where(g => g.StudentDbId == studentDbId)
+                .ToListAsync();
         }
 
-        // Delete
+        // Save grade for active profile
+        public async Task<int> SaveGradeAsync(Grade grade)
+        {
+            var activeStudent = ActiveProfileService.CurrentStudent;
+
+            if (activeStudent == null)
+                throw new Exception("No hay perfil activo.");
+
+            grade.StudentDbId = activeStudent.Id;
+
+            if (grade.Id != 0)
+                return await _database.UpdateAsync(grade);
+
+            return await _database.InsertAsync(grade);
+        }
+
+        // Delete grades only for active profile
+        public async Task<int> ClearGradesForActiveStudentAsync()
+        {
+            var activeStudent = ActiveProfileService.CurrentStudent;
+
+            if (activeStudent == null)
+                return 0;
+
+            int studentDbId = activeStudent.Id;
+
+            var grades = await _database.Table<Grade>()
+                .Where(g => g.StudentDbId == studentDbId)
+                .ToListAsync();
+
+            int deletedCount = 0;
+
+            foreach (var grade in grades)
+            {
+                deletedCount += await _database.DeleteAsync(grade);
+            }
+
+            return deletedCount;
+        }
+
+        // Delete all grades from database
         public Task<int> ClearGradesAsync()
         {
             return _database.DeleteAllAsync<Grade>();
+        }
+
+        // MATRICULAS------------------------------------------
+
+        public async Task<List<MatriculaItem>> GetMatriculasForActiveStudentAsync()
+        {
+            var activeStudent = ActiveProfileService.CurrentStudent;
+
+            if (activeStudent == null)
+                return new List<MatriculaItem>();
+
+            int studentDbId = activeStudent.Id;
+
+            return await _database.Table<MatriculaItem>()
+                .Where(m => m.StudentDbId == studentDbId)
+                .ToListAsync();
+        }
+
+        public async Task<int> SaveMatriculaAsync(MatriculaItem matricula)
+        {
+            var activeStudent = ActiveProfileService.CurrentStudent;
+
+            if (activeStudent == null)
+                throw new Exception("No hay perfil activo.");
+
+            matricula.StudentDbId = activeStudent.Id;
+
+            if (matricula.Id != 0)
+                return await _database.UpdateAsync(matricula);
+
+            return await _database.InsertAsync(matricula);
+        }
+
+        public async Task<int> DeleteMatriculaAsync(MatriculaItem matricula)
+        {
+            return await _database.DeleteAsync(matricula);
         }
     }
 }

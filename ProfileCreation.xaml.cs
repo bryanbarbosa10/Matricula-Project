@@ -23,6 +23,7 @@ namespace AMPS
             base.OnAppearing();
 
             NameEntry.Text = string.Empty;
+            NicknameEntry.Text = string.Empty;
             StudentIdEntry.Text = string.Empty;
             EmailEntry.Text = string.Empty;
         }
@@ -32,6 +33,7 @@ namespace AMPS
         {
             // Clean text
             string name = NameEntry.Text?.Trim() ?? string.Empty;
+            string nickname = NicknameEntry.Text?.Trim() ?? string.Empty;
             string studentId = StudentIdEntry.Text?.Trim() ?? string.Empty;
             string email = EmailEntry.Text?.Trim() ?? string.Empty;
 
@@ -53,6 +55,12 @@ namespace AMPS
             if (name.Length > 30)
             {
                 await DisplayAlert("Invalid Data", "Name cannot exceed 30 characters.", "OK");
+                return;
+            }
+
+            if (nickname.Length > 40)
+            {
+                await DisplayAlert("Invalid Data", "Nickname cannot exceed 20 characters.", "OK");
                 return;
             }
 
@@ -89,6 +97,7 @@ namespace AMPS
             var student = new Student
             {
                 Name = name,
+                Nickname = nickname,
                 StudentId = studentId,
                 Email = email
             };
@@ -97,6 +106,15 @@ namespace AMPS
             {
                 // Save profile
                 await _dbService.SaveStudentAsync(student);
+
+                // Important:
+                // Reload the student from SQLite so it has the generated Id
+                var savedStudent = await _dbService.GetStudentByStudentIdAsync(studentId);
+
+                if (savedStudent != null)
+                {
+                    await ActiveProfileService.SetActiveStudentAsync(savedStudent);
+                }
 
                 await DisplayAlert("Success", "Profile saved successfully.", "OK");
 

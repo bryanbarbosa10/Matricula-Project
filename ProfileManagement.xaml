@@ -13,6 +13,14 @@
             FontAttributes="Bold"
             HorizontalOptions="Center" />
 
+        <!-- Active profile label -->
+        <Label
+            x:Name="ActiveProfileLabel"
+            Text="Perfil activo: Ninguno"
+            FontSize="16"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
         <!-- Add profile -->
         <Button
             Text="+ Añadir Perfil"
@@ -20,39 +28,80 @@
 
         <!-- Profiles list -->
         <CollectionView x:Name="ProfilesCollectionView">
+
             <CollectionView.Header>
                 <Grid Padding="10"
-                      ColumnDefinitions="*,*,*,Auto"
+                      ColumnDefinitions="*,*,*,*,Auto,Auto"
                       BackgroundColor="#2A2A2A">
-                    <Label Text="Nombre" FontAttributes="Bold" TextColor="White" />
-                    <Label Grid.Column="1" Text="Student ID" FontAttributes="Bold" TextColor="White" />
-                    <Label Grid.Column="2" Text="Email" FontAttributes="Bold" TextColor="White" />
-                    <Label Grid.Column="3" Text="Editar" FontAttributes="Bold" TextColor="White" />
+
+                    <Label Text="Nickname"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+
+                    <Label Grid.Column="1"
+                           Text="Nombre"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+
+                    <Label Grid.Column="2"
+                           Text="Student ID"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+
+                    <Label Grid.Column="3"
+                           Text="Email"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+
+                    <Label Grid.Column="4"
+                           Text="Usar"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+
+                    <Label Grid.Column="5"
+                           Text="Editar"
+                           FontAttributes="Bold"
+                           TextColor="White" />
                 </Grid>
             </CollectionView.Header>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="10" ColumnDefinitions="*,*,*,Auto">
+                    <Grid Padding="10"
+                          ColumnDefinitions="*,*,*,*,Auto,Auto">
+
+                        <!-- Nickname -->
+                        <Label Text="{Binding Nickname}"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
 
                         <!-- Name -->
-                        <Label Text="{Binding Name}" VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="{Binding Name}"
+                               VerticalOptions="Center" />
 
                         <!-- Student ID -->
-                        <Label Grid.Column="1"
+                        <Label Grid.Column="2"
                                Text="{Binding StudentId}"
                                VerticalOptions="Center" />
 
                         <!-- Email -->
-                        <Label Grid.Column="2"
+                        <Label Grid.Column="3"
                                Text="{Binding Email}"
                                VerticalOptions="Center" />
 
+                        <!-- Select button -->
+                        <Button Grid.Column="4"
+                                Text="Select"
+                                Clicked="OnSelectProfileClicked"
+                                CommandParameter="{Binding .}" />
+
                         <!-- Edit button -->
-                        <Button Grid.Column="3"
+                        <Button Grid.Column="5"
                                 Text="Edit"
                                 Clicked="OnEditProfileClicked"
                                 CommandParameter="{Binding .}" />
+
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

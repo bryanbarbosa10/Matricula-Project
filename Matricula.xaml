@@ -1,31 +1,56 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AMPS.Matricula"
              Title="Mis Matrículas">
 
-
-
     <VerticalStackLayout Padding="20" Spacing="15">
-        <Label Text="Matrículas Registradas" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-        <Button Text="+" 
-            FontSize="30" 
-            WidthRequest="60" 
-            HeightRequest="60" 
-            CornerRadius="30" 
-            BackgroundColor="#C8E6C9" 
-            TextColor="Black" 
-            HorizontalOptions="Center"
-            Clicked="OnAddMatriculaClicked"/>   
 
-        <Label Text="Añadir Matrícula" HorizontalOptions="Center"/>
+        <Label Text="Matrículas Registradas"
+               FontSize="20"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"/>
 
-        <Frame BackgroundColor="#F8BBD0" Padding="15" CornerRadius="5">
-            <Label Text="Semestre 1" HorizontalOptions="Center"/>
-        </Frame>
-        
-        <Frame BackgroundColor="#BBDEFB" Padding="15" CornerRadius="5">
-            <Label Text="Semestre 2" HorizontalOptions="Center"/>
-        </Frame>
+        <Button Text="+"
+                FontSize="30"
+                WidthRequest="60"
+                HeightRequest="60"
+                CornerRadius="30"
+                BackgroundColor="#C8E6C9"
+                TextColor="Black"
+                HorizontalOptions="Center"
+                Clicked="OnAddMatriculaClicked"/>
+
+        <Label Text="Añadir Matrícula"
+               HorizontalOptions="Center"/>
+
+        <CollectionView x:Name="MatriculasCollectionView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#BBDEFB"
+                           Padding="15"
+                           CornerRadius="5"
+                           Margin="0,5">
+
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Semestre}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+
+                            <Label Text="{Binding Year}"
+                                   FontSize="14"
+                                   HorizontalOptions="Center"/>
+
+                            <Label Text="{Binding DateSaved, StringFormat='Guardado: {0:MM/dd/yyyy}'}"
+                                   FontSize="12"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
     </VerticalStackLayout>
 </ContentPage>

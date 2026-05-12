@@ -22,7 +22,18 @@ namespace AMPS
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await LoadProfilesAsync();
+
+            var students = await _dbService.GetStudentsAsync();
+            ProfilesCollectionView.ItemsSource = students;
+
+            if (ActiveProfileService.HasActiveProfile)
+            {
+                ActiveProfileLabel.Text = $"Perfil activo: {ActiveProfileService.CurrentStudent.Nickname}";
+            }
+            else
+            {
+                ActiveProfileLabel.Text = "Perfil activo: Ninguno";
+            }
         }
 
         // Load all profiles
@@ -104,6 +115,23 @@ namespace AMPS
                 await DisplayAlert("Success", "Profile updated successfully.", "OK");
 
                 await LoadProfilesAsync();
+            }
+        }
+        private async void OnSelectProfileClicked(object sender, EventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is Student selectedStudent)
+            {
+                await ActiveProfileService.SetActiveStudentAsync(selectedStudent);
+
+                ActiveProfileLabel.Text = $"Perfil activo: {selectedStudent.Nickname}";
+
+                await DisplayAlert(
+                    "Perfil activo",
+                    $"Ahora estás usando el perfil: {selectedStudent.Nickname}",
+                    "OK"
+                );
+
+                await Shell.Current.GoToAsync("//Dashboard");
             }
         }
     }

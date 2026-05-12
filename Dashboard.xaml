@@ -4,13 +4,25 @@
              x:Class="AMPS.Dashboard"
              Title="Dashboard">
 
-    <VerticalStackLayout Padding="30" Spacing="20">
+    <VerticalStackLayout Padding="30" Spacing="10">
 
-        <!-- Welcome text -->
         <Label
-            Text="Bienvenido al Dashboard"
+            Text="Dashboard"
             FontSize="28"
             FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
+        <Label
+            x:Name="WelcomeLabel"
+            Text="Welcome"
+            FontSize="24"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
+        <Label
+            x:Name="NicknameLabel"
+            Text=""
+            FontSize="16"
             HorizontalOptions="Center" />
 
     </VerticalStackLayout>
