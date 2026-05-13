@@ -4,74 +4,344 @@
              x:Class="AMPS.Secuencial"
              Title="Secuencial Académico">
 
-    <Grid RowDefinitions="Auto, *, Auto" Padding="20">
+    <Grid Padding="20">
 
-        <VerticalStackLayout Grid.Row="0" Spacing="5" Margin="0,0,0,10">
-            <Label Text="Progreso de Carrera" 
-           FontSize="22" 
-           FontAttributes="Bold" 
-           TextColor="{StaticResource AmpsBlue}"
-           HorizontalOptions="Center"/>
+        <!-- Página principal -->
+        <Grid RowDefinitions="Auto, *, Auto">
 
-            <Button Text="Subir Secuencial (Documento)"
-            Clicked="OnUploadDocumentClicked"
-            BackgroundColor="LightGray"
-            TextColor="Black"
-            Margin="0,10,0,0"/>
-            <Label x:Name="FileNameLabel" 
-           Text="Ningún archivo seleccionado" 
-           FontSize="12" 
-           TextColor="Gray" 
-           HorizontalOptions="Center"/>
+            <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="0,0,0,10">
 
-            <Label Text="Marca los cursos que ya has aprobado" 
-           FontSize="14" 
-           TextColor="Gray" 
+                <Label Text="Progreso de Carrera"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource AmpsBlue}"
+                       HorizontalOptions="Center"/>
+
+                <Button x:Name="UploadSecuencialButton"
+                        Text="Subir Secuencial (PDF o Word)"
+                        Clicked="OnUploadDocumentClicked"
+                        BackgroundColor="LightGray"
+                        TextColor="Black"
+                        Margin="0,10,0,0"/>
+
+                <Label x:Name="FileNameLabel"
+                       Text="Ningún archivo seleccionado"
+                       FontSize="12"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"/>
+
+                <Button x:Name="AddManualCourseButton"
+                        Text="Añadir cursos +"
+                        Clicked="OnAddManualCourseClicked"
+                        BackgroundColor="{StaticResource AmpsBlue}"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="45"
+                        Margin="0,10,0,0"
+                        IsVisible="False"/>
+                
+                <Label Text="Lista de cursos del secuencial"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource AmpsBlue}"
+                       HorizontalOptions="Center"
+                       Margin="0,15,0,0"/>
+
+            </VerticalStackLayout>
+
+            <!-- Lista principal de cursos aceptados -->
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding MiSecuencial}"
+                            Margin="0,10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,5"
+                               Padding="10"
+                               CornerRadius="8"
+                               BorderColor="{AppThemeBinding Light=#E0E0E0, Dark=#444444}"
+                               BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                               HasShadow="False">
+
+                            <Grid ColumnDefinitions="50,*,Auto">
+
+                                <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}"
+                                          Grid.Column="0"
+                                          VerticalOptions="Center"
+                                          Color="{StaticResource AmpsBlue}"
+                                          CheckedChanged="OnCourseCheckedChanged"/>
+
+                                <VerticalStackLayout Grid.Column="1"
+                                                     VerticalOptions="Center">
+
+                                    <Label Text="{Binding Nombre}"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+
+                                    <Label Text="{Binding Codigo}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light=Gray, Dark=#BBBBBB}"/>
+
+                                    <Label Text="{Binding Creditos, StringFormat='{0} Créditos'}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource AmpsBlue}"/>
+
+                                </VerticalStackLayout>
+
+                                <!-- Botón editar curso -->
+                                <Button Grid.Column="2"
+                                        Text="✏️"
+                                        FontSize="18"
+                                        WidthRequest="45"
+                                        HeightRequest="45"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnEditCourseClicked"/>
+
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button x:Name="SaveProgressButton"
+                    Grid.Row="2"
+                    Text="Guardar Progreso"
+                    Clicked="OnGuardarProgresoClicked"
+                    BackgroundColor="{StaticResource AmpsBlue}"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,10,0,0"
+                    IsVisible="False"/>
+
+        </Grid>
+
+
+        <!-- Overlay tipo popup para cursos detectados -->
+        <Grid x:Name="ExtractedCoursesOverlay"
+              IsVisible="False"
+              BackgroundColor="#99000000"
+              Padding="20">
+
+            <Frame VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   WidthRequest="700"
+                   MaximumHeightRequest="650"
+                   CornerRadius="15"
+                   Padding="20"
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                   BorderColor="{AppThemeBinding Light=#DDDDDD, Dark=#444444}">
+
+                <Grid RowDefinitions="Auto, *, Auto">
+
+                    <VerticalStackLayout Grid.Row="0" Spacing="5">
+
+                        <Label Text="Cursos detectados"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource AmpsBlue}"
+                               HorizontalOptions="Center"/>
+
+                        <Label Text="Revisa, edita y selecciona los cursos antes de aceptarlos."
+                               FontSize="13"
+                               TextColor="{AppThemeBinding Light=Gray, Dark=#BBBBBB}"
+                               HorizontalOptions="Center"/>
+
+                    </VerticalStackLayout>
+
+                    <CollectionView Grid.Row="1"
+                                    x:Name="ExtractedCoursesCollectionView"
+                                    ItemsSource="{Binding CursosExtraidos}"
+                                    Margin="0,15">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,5"
+                                       Padding="12"
+                                       CornerRadius="8"
+                                       BorderColor="{AppThemeBinding Light=#E0E0E0, Dark=#444444}"
+                                       BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2A2A2A}"
+                                       HasShadow="False">
+
+                                    <VerticalStackLayout Spacing="8">
+
+                                        <HorizontalStackLayout Spacing="10">
+                                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                      Color="{StaticResource AmpsBlue}" />
+
+                                            <Label Text="Incluir curso"
+                                                   VerticalOptions="Center"
+                                                   FontSize="13"
+                                                   TextColor="{AppThemeBinding Light=#555555, Dark=#DDDDDD}" />
+                                        </HorizontalStackLayout>
+
+                                        <Label Text="Código"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#555555, Dark=#DDDDDD}" />
+
+                                        <Entry Text="{Binding Codigo, Mode=TwoWay}"
+                                               Placeholder="Código del curso"
+                                               TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                               PlaceholderColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                                               BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}" />
+
+                                        <Label Text="Nombre"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#555555, Dark=#DDDDDD}" />
+
+                                        <Entry Text="{Binding Nombre, Mode=TwoWay}"
+                                               Placeholder="Nombre del curso"
+                                               TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                               PlaceholderColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                                               BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}" />
+
+                                        <Label Text="Créditos"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#555555, Dark=#DDDDDD}" />
+
+                                        <Entry Text="{Binding Creditos, Mode=TwoWay}"
+                                               Keyboard="Numeric"
+                                               Placeholder="Créditos"
+                                               TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                               PlaceholderColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                                               BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}" />
+
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="*,*"
+                          ColumnSpacing="10">
+
+                        <Button Text="Cancelar"
+                                Grid.Column="0"
+                                Clicked="OnCancelExtractedCoursesClicked"
+                                BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#444444}"
+                                TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                CornerRadius="10"/>
+
+                        <Button Text="Aceptar cursos"
+                                Grid.Column="1"
+                                Clicked="OnAcceptExtractedCoursesClicked"
+                                BackgroundColor="#C8E6C9"
+                                TextColor="Black"
+                                CornerRadius="10"/>
+
+                    </Grid>
+
+                </Grid>
+            </Frame>
+        </Grid>
+
+        <!-- Overlay para editar un curso existente -->
+        <Grid x:Name="EditCourseOverlay"
+      IsVisible="False"
+      BackgroundColor="#99000000"
+      Padding="20">
+
+            <Frame VerticalOptions="Center"
            HorizontalOptions="Center"
-           Margin="0,10,0,0"/>
-        </VerticalStackLayout>
+           WidthRequest="500"
+           CornerRadius="15"
+           Padding="20"
+           BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+           BorderColor="{AppThemeBinding Light=#DDDDDD, Dark=#444444}">
 
-        <CollectionView Grid.Row="1" 
-                        ItemsSource="{Binding MiSecuencial}" 
-                        Margin="0,10">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Margin="0,5" 
-                           Padding="10" 
-                           CornerRadius="8" 
-                           BorderColor="#E0E0E0"
-                           HasShadow="False">
-                        <Grid ColumnDefinitions="50,*">
-                            <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" 
-                                      Grid.Column="0" 
-                                      VerticalOptions="Center"
-                                      Color="{StaticResource AmpsBlue}"/>
+                <VerticalStackLayout Spacing="12">
 
-                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                <Label Text="{Binding Nombre}" 
-                                       FontAttributes="Bold" 
-                                       FontSize="16"
-                                       TextColor="Black"/>
-                                <Label Text="{Binding Codigo}" 
-                                       FontSize="12" 
-                                       TextColor="Gray"/>
-                                <Label Text="{Binding Creditos, StringFormat='{0} Créditos'}" 
-                                       FontSize="11" 
-                                       TextColor="{StaticResource AmpsBlue}"/>
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                    <Label x:Name="EditCourseTitleLabel"
+                           Text="Editar curso"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AmpsBlue}"
+                           HorizontalOptions="Center"/>
 
-        <Button Grid.Row="2"
-                Text="Guardar Progreso"
-                Clicked="OnGuardarProgresoClicked"
-                BackgroundColor="{StaticResource AmpsBlue}"
-                TextColor="White"
-                CornerRadius="10"
-                HeightRequest="50"
-                Margin="0,10,0,0"/>
+                    <Label Text="Código"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#555555, Dark=#DDDDDD}" />
+
+                    <Entry x:Name="EditCodigoEntry"
+                   Placeholder="Código del curso"
+                   TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                   PlaceholderColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}" />
+
+                    <Label Text="Nombre"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#555555, Dark=#DDDDDD}" />
+
+                    <Entry x:Name="EditNombreEntry"
+                   Placeholder="Nombre del curso"
+                   TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                   PlaceholderColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}" />
+
+                    <Label Text="Créditos"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#555555, Dark=#DDDDDD}" />
+
+                    <Entry x:Name="EditCreditosEntry"
+                   Placeholder="Créditos"
+                   Keyboard="Numeric"
+                   TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                   PlaceholderColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}" />
+
+                    <Grid ColumnDefinitions="*,*,*"
+                  ColumnSpacing="10"
+                  Margin="0,10,0,0">
+
+                        <Button x:Name="DeleteCourseButton"
+                                Grid.Column="0"
+                                Text="Borrar"
+                                Clicked="OnDeleteCourseFromEditClicked"
+                                BackgroundColor="#EF5350"
+                                TextColor="White"
+                                CornerRadius="10"/>
+
+                        <Button Grid.Column="1"
+                        Text="Cancelar"
+                        Clicked="OnCancelEditCourseClicked"
+                        BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#444444}"
+                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                        CornerRadius="10"/>
+
+                        <Button Grid.Column="2"
+                        Text="Guardar"
+                        Clicked="OnSaveEditCourseClicked"
+                        BackgroundColor="{StaticResource AmpsBlue}"
+                        TextColor="White"
+                        CornerRadius="10"/>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+
+        <!-- Toast interno de la página -->
+        <Frame x:Name="ToastFrame"
+               IsVisible="False"
+               BackgroundColor="{AppThemeBinding Light=#333333, Dark=#EEEEEE}"
+               CornerRadius="20"
+               Padding="15,10"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="0,0,0,80"
+               HasShadow="True">    
+
+            <Label x:Name="ToastLabel"
+                   Text=""
+                   FontSize="14"
+                   TextColor="{AppThemeBinding Light=White, Dark=Black}"
+                   HorizontalTextAlignment="Center"/>
+        </Frame>
     </Grid>
 </ContentPage>

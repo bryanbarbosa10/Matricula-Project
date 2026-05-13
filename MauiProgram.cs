@@ -32,6 +32,9 @@ namespace AMPS
             // DB service
             builder.Services.AddSingleton(s => new DataBaseServices(dbPath));
 
+            //Arreglando sequencial
+            builder.Services.AddSingleton<CourseExtractionService>();
+
             // Pages
             builder.Services.AddTransient<ProfileCreation>();
             builder.Services.AddTransient<Dashboard>();

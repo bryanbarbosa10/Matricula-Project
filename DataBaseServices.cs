@@ -23,6 +23,8 @@ namespace AMPS
             _database.CreateTableAsync<MatriculaItem>().Wait();
         }
 
+
+
         // STUDENTS-----------------------------------------
 
         // Check for profiles
@@ -66,6 +68,8 @@ namespace AMPS
             return _database.UpdateAsync(student);
         }
 
+
+
         // COURSES-----------------------------------------
 
         // Shows all courses saved
@@ -104,6 +108,13 @@ namespace AMPS
 
             return await _database.InsertAsync(course);
         }
+
+        public async Task<int> DeleteCourseAsync(Course course)
+        {
+            return await _database.DeleteAsync(course);
+        }
+
+
 
         // GRADES------------------------------------------
 
@@ -173,6 +184,31 @@ namespace AMPS
         {
             return _database.DeleteAllAsync<Grade>();
         }
+
+        public async Task<int> DeleteGradeForCourseAsync(Course course)
+        {
+            var activeStudent = ActiveProfileService.CurrentStudent;
+
+            if (activeStudent == null)
+                return 0;
+
+            var existingGrades = await _database.Table<Grade>()
+                .Where(g => g.StudentDbId == activeStudent.Id &&
+                            g.Materia == course.Nombre &&
+                            g.Creditos == course.Creditos)
+                .ToListAsync();
+
+            int deletedCount = 0;
+
+            foreach (var grade in existingGrades)
+            {
+                deletedCount += await _database.DeleteAsync(grade);
+            }
+
+            return deletedCount;
+        }
+
+
 
         // MATRICULAS------------------------------------------
 
